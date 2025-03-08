@@ -8,6 +8,6 @@ public record AddBorrowingRequest(
         @NonNull
         String bookId,
         @NonNull
-        String userId //hrusnya dari token
+        String userId
 ) {
 }
