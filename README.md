@@ -231,7 +231,7 @@ Authorization: Bearer <access_token>
 ```json
 {
   "borrowingId": "string",
-  "status": "RETURNED"
+  "status": "string"
 }
 ```
 

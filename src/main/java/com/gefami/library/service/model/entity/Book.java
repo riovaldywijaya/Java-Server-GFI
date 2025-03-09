@@ -1,6 +1,6 @@
 package com.gefami.library.service.model.entity;
 
-import com.gefami.library.service.helper.NanoIdGenerator;
+import com.gefami.library.service.util.helper.NanoIdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

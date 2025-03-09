@@ -1,5 +1,7 @@
-package com.gefami.library.service.util.helper;
+package com.gefami.library.service.util.exception;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gefami.library.service.model.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
@@ -15,6 +17,16 @@ public class AuthEntryPointJwt  implements AuthenticationEntryPoint {
             HttpServletResponse response,
             AuthenticationException authException
     ) throws IOException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        var errorResponse = new ErrorResponse(401, "Invalid Token");
+
+        var objectMapper = new ObjectMapper();
+        var jsonResponse = objectMapper.writeValueAsString(errorResponse);
+
+        var out = response.getWriter();
+        out.print(jsonResponse);
+        out.flush();
     }
 }

@@ -27,3 +27,9 @@ server:
   port: 8082
 jwt:
   secret: thisIsMysecregtfrdesww233eggtffeeddgkjjhhtdhttebd54ndhdhfhhhshs8877465sbbdd
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+    org.hibernate.validator: DEBUG
+    com.gefami.library: DEBUG

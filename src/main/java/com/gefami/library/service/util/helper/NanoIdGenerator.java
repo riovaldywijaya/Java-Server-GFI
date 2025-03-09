@@ -1,4 +1,4 @@
-package com.gefami.library.service.helper;
+package com.gefami.library.service.util.helper;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;

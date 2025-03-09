@@ -6,7 +6,8 @@ import com.gefami.library.service.model.response.borrowing.UpdateBorrowingRespon
 import com.gefami.library.service.repository.BookRepository;
 import com.gefami.library.service.repository.BorrowingRepository;
 import com.gefami.library.service.util.enums.BorrowingStatus;
-import com.gefami.library.service.util.ResourceNotFoundException;
+import com.gefami.library.service.util.exception.BusinessValidationException;
+import com.gefami.library.service.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +23,13 @@ public class UpdateBorrowingService {
 
     @Transactional
     public UpdateBorrowingResponse execute(UpdateBorrowingRequest updateBorrowingRequest) {
-        if (!updateBorrowingRequest.status().equals(BorrowingStatus.RETURNED)) {
-            throw new RuntimeException("Status are not allowed");
+        if (!updateBorrowingRequest.status().equalsIgnoreCase(BorrowingStatus.RETURNED.name())) {
+            throw new BusinessValidationException("Status are not allowed");
         }
 
         var borrowing = borrowingRepository.findById(updateBorrowingRequest.borrowingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Borrowing  Not Found") );
-
-        borrowing.setStatus(updateBorrowingRequest.status());
+                .orElseThrow(() -> new ResourceNotFoundException("Borrowing Not Found") );
+        borrowing.setStatus(BorrowingStatus.RETURNED);
         borrowing.setReturnedDate(LocalDateTime.now());
 
         var book = borrowing.getBook();

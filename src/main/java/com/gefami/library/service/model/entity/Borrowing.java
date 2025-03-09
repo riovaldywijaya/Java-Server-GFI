@@ -1,6 +1,6 @@
 package com.gefami.library.service.model.entity;
 
-import com.gefami.library.service.helper.NanoIdGenerator;
+import com.gefami.library.service.util.helper.NanoIdGenerator;
 import com.gefami.library.service.util.enums.BorrowingStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 @Data
 @Entity

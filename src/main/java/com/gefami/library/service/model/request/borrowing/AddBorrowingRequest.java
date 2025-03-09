@@ -1,13 +1,13 @@
 package com.gefami.library.service.model.request.borrowing;
 
 import io.soabase.recordbuilder.core.RecordBuilder;
-import lombok.NonNull;
+import jakarta.validation.constraints.NotNull;
 
 @RecordBuilder
 public record AddBorrowingRequest(
-        @NonNull
+        @NotNull
         String bookId,
-        @NonNull
+        @NotNull
         String userId
 ) {
 }

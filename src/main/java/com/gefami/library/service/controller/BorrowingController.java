@@ -8,6 +8,7 @@ import com.gefami.library.service.model.response.borrowing.UpdateBorrowingRespon
 import com.gefami.library.service.service.borrowing.AddBorrowingService;
 import com.gefami.library.service.service.borrowing.GetBorrowingsService;
 import com.gefami.library.service.service.borrowing.UpdateBorrowingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class BorrowingController {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<AddBorrowingResponse> addBorrowing(
-            @RequestBody @Validated AddBorrowingRequest addBorrowingRequest
+            @RequestBody @Valid AddBorrowingRequest addBorrowingRequest
     ) {
         var result = addBorrowingService.execute(addBorrowingRequest);
         return ResponseEntity.ok(result);
@@ -53,7 +54,7 @@ public class BorrowingController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<UpdateBorrowingResponse> updateBorrowing(@RequestBody UpdateBorrowingRequest request) {
+    public ResponseEntity<UpdateBorrowingResponse> updateBorrowing(@RequestBody @Valid UpdateBorrowingRequest request) {
         var result = updateBorrowingService.execute(request);
         return ResponseEntity.ok(result);
     }

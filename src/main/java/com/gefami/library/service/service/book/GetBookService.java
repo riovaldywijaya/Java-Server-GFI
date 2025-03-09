@@ -3,7 +3,7 @@ package com.gefami.library.service.service.book;
 import com.gefami.library.service.model.response.book.GetBookResponse;
 import com.gefami.library.service.model.response.book.GetBookResponseBuilder;
 import com.gefami.library.service.repository.BookRepository;
-import com.gefami.library.service.util.ResourceNotFoundException;
+import com.gefami.library.service.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

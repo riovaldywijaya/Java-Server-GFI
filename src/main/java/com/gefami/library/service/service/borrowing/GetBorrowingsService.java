@@ -27,17 +27,16 @@ public class GetBorrowingsService {
             borrowings = borrowingRepository.findAllByStatus(BorrowingStatus.valueOf(status.toUpperCase()));
         }
 
-        return borrowings.stream().map(b -> {
-            return GetBorrowingsResponseBuilder.builder()
-                    .id(b.getId())
-                    .bookName(b.getBook().getName())
-                    .userName(b.getUser().getName())
-                    .status(b.getStatus())
-                    .borrowingDate(b.getBorrowingDate())
-                    .returnedDate(b.getReturnedDate())
-                    .dueDate(b.getDueDate())
-                    .build();
-        }).toList();
+        return borrowings.stream()
+                .map(b -> GetBorrowingsResponseBuilder.builder()
+                        .id(b.getId())
+                        .bookName(b.getBook().getName())
+                        .userName(b.getUser().getName())
+                        .status(b.getStatus())
+                        .borrowingDate(b.getBorrowingDate())
+                        .returnedDate(b.getReturnedDate())
+                        .dueDate(b.getDueDate())
+                        .build()).toList();
     }
 
 }
