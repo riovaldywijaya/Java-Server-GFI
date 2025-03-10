@@ -1,5 +1,6 @@
 package com.gefami.library.service.service.borrowing;
 
+import com.gefami.library.service.model.entity.Borrowing;
 import com.gefami.library.service.model.request.borrowing.UpdateBorrowingRequest;
 import com.gefami.library.service.model.response.borrowing.UpdateBorrowingResponse;
 import com.gefami.library.service.model.response.borrowing.UpdateBorrowingResponseBuilder;
@@ -23,30 +24,41 @@ public class UpdateBorrowingService {
 
     @Transactional
     public UpdateBorrowingResponse execute(UpdateBorrowingRequest updateBorrowingRequest) {
-        if (!updateBorrowingRequest.status().equalsIgnoreCase(BorrowingStatus.RETURNED.name())) {
-            throw new BusinessValidationException("Status are not allowed");
-        }
+        validateStatus(updateBorrowingRequest);
 
-        var borrowing = borrowingRepository.findById(updateBorrowingRequest.borrowingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Borrowing Not Found") );
-        borrowing.setStatus(BorrowingStatus.RETURNED);
-        borrowing.setReturnedDate(LocalDateTime.now());
+        var borrowing = updateBorrowing(updateBorrowingRequest.borrowingId());
 
+        updateBook(borrowing);
+
+        return UpdateBorrowingResponseBuilder.builder()
+                .id(borrowing.getId())
+                .bookName(borrowing.getBook().getName())
+                .userName(borrowing.getUser().getName())
+                .status(borrowing.getStatus())
+                .borrowingDate(borrowing.getBorrowingDate())
+                .returnedDate(borrowing.getReturnedDate())
+                .dueDate(borrowing.getDueDate())
+                .build();
+    }
+
+    private void updateBook(Borrowing borrowing) {
         var book = borrowing.getBook();
         book.setIsAvailable(Boolean.TRUE);
         bookRepository.save(book);
+    }
 
-        var updateBorrowing = borrowingRepository.save(borrowing);
+    private Borrowing updateBorrowing(String borrowingId){
+        var borrowing = borrowingRepository.findById(borrowingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Borrowing Not Found") );
+        borrowing.setStatus(BorrowingStatus.RETURNED);
+        borrowing.setReturnedDate(LocalDateTime.now());
+        return borrowingRepository.save(borrowing);
+    }
 
-        return UpdateBorrowingResponseBuilder.builder()
-                .id(updateBorrowing.getId())
-                .bookName(updateBorrowing.getBook().getName())
-                .userName(updateBorrowing.getUser().getName())
-                .status(updateBorrowing.getStatus())
-                .borrowingDate(updateBorrowing.getBorrowingDate())
-                .returnedDate(updateBorrowing.getReturnedDate())
-                .dueDate(updateBorrowing.getDueDate())
-                .build();
+    private void validateStatus(UpdateBorrowingRequest updateBorrowingRequest) {
+        if (!updateBorrowingRequest.status().equalsIgnoreCase(BorrowingStatus.RETURNED.name())) {
+            throw new BusinessValidationException("Status are not allowed");
+        }
     }
 
 }

@@ -13,18 +13,18 @@ public class GetBookService {
 
     private final BookRepository bookRepository;
 
-    public GetBookResponse execute(String id){
-        var book = bookRepository.findById(id)
+    public GetBookResponse execute(String id) {
+        return bookRepository.findById(id)
+                .map(b ->
+                        GetBookResponseBuilder.builder()
+                                .id(b.getId())
+                                .name(b.getName())
+                                .author(b.getAuthor())
+                                .publishedYear(b.getPublishedYear())
+                                .category(b.getCategory())
+                                .isAvailable(b.getIsAvailable())
+                                .build())
                 .orElseThrow(() -> new ResourceNotFoundException("Book Not Found"));
-
-        return GetBookResponseBuilder.builder()
-                .id(book.getId())
-                .name(book.getName())
-                .author(book.getAuthor())
-                .publishedYear(book.getPublishedYear())
-                .category(book.getCategory())
-                .isAvailable(book.getIsAvailable())
-                .build();
     }
 
 }

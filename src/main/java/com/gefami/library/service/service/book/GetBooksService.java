@@ -17,14 +17,15 @@ public class GetBooksService {
     public List<GetBooksResponse> execute() {
         var books = bookRepository.findAll();
 
-        return books.stream().map(b -> GetBooksResponseBuilder.builder()
-                .id(b.getId())
-                .name(b.getName())
-                .author(b.getAuthor())
-                .publishedYear(b.getPublishedYear())
-                .category(b.getCategory())
-                .isAvailable(b.getIsAvailable())
-                .build()).toList();
+        return books.stream()
+                .map(b -> GetBooksResponseBuilder.builder()
+                        .id(b.getId())
+                        .name(b.getName())
+                        .author(b.getAuthor())
+                        .publishedYear(b.getPublishedYear())
+                        .category(b.getCategory())
+                        .isAvailable(b.getIsAvailable())
+                        .build()).toList();
     }
 
 }

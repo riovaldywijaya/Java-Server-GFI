@@ -19,13 +19,7 @@ public class GetBorrowingsService {
     private final BorrowingRepository borrowingRepository;
 
     public List<GetBorrowingsResponse> execute(String status) {
-        List<Borrowing> borrowings;
-
-        if (Constants.OVERDUE.equalsIgnoreCase(status)) {
-            borrowings = borrowingRepository.findAllByStatusAndDueDateBefore(BorrowingStatus.BORROWED, LocalDateTime.now());
-        } else {
-            borrowings = borrowingRepository.findAllByStatus(BorrowingStatus.valueOf(status.toUpperCase()));
-        }
+        List<Borrowing> borrowings = getBorrowings(status);
 
         return borrowings.stream()
                 .map(b -> GetBorrowingsResponseBuilder.builder()
@@ -37,6 +31,17 @@ public class GetBorrowingsService {
                         .returnedDate(b.getReturnedDate())
                         .dueDate(b.getDueDate())
                         .build()).toList();
+    }
+
+    private List<Borrowing> getBorrowings(String status) {
+        List<Borrowing> borrowings;
+
+        if (Constants.OVERDUE.equalsIgnoreCase(status)) {
+            borrowings = borrowingRepository.findAllByStatusAndDueDateBefore(BorrowingStatus.BORROWED, LocalDateTime.now());
+        } else {
+            borrowings = borrowingRepository.findAllByStatus(BorrowingStatus.valueOf(status.toUpperCase()));
+        }
+        return borrowings;
     }
 
 }

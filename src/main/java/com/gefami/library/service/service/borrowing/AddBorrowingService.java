@@ -9,6 +9,7 @@ import com.gefami.library.service.model.response.borrowing.AddBorrowingResponseB
 import com.gefami.library.service.repository.BookRepository;
 import com.gefami.library.service.repository.BorrowingRepository;
 import com.gefami.library.service.repository.UserRepository;
+import com.gefami.library.service.util.constants.Constants;
 import com.gefami.library.service.util.enums.BorrowingStatus;
 import com.gefami.library.service.util.exception.BusinessValidationException;
 import com.gefami.library.service.util.exception.ResourceNotFoundException;
@@ -28,28 +29,13 @@ public class AddBorrowingService {
 
     @Transactional
     public AddBorrowingResponse execute(AddBorrowingRequest addBorrowingRequest) {
-        var bookId = addBorrowingRequest.bookId();
-        var userId = addBorrowingRequest.userId();
-
-        var book = validateBook(bookId);
-
-        var user = validateUser(userId);
+        var book = validateBook(addBorrowingRequest.bookId());
+        var user = validateUser(addBorrowingRequest.userId());
 
         book.setIsAvailable(Boolean.FALSE);
         bookRepository.save(book);
 
-        var borrowingDate = LocalDateTime.now();
-        var dueDate = borrowingDate.plusSeconds(7 * 86400); // 7 days
-
-        var borrowing = borrowingRepository.save(
-                Borrowing.builder()
-                        .book(book)
-                        .user(user)
-                        .status(BorrowingStatus.BORROWED)
-                        .borrowingDate(borrowingDate)
-                        .dueDate(dueDate)
-                        .build()
-        );
+        var borrowing = createBorrowing(book, user);
 
         return AddBorrowingResponseBuilder.builder()
                 .id(borrowing.getId())
@@ -59,6 +45,21 @@ public class AddBorrowingService {
                 .dueDate(borrowing.getDueDate())
                 .status(borrowing.getStatus())
                 .build();
+    }
+
+    private Borrowing createBorrowing(Book book, User user) {
+        var borrowingDate = LocalDateTime.now();
+        var dueDate = borrowingDate.plusSeconds(Constants.DUE_DATE);
+
+        return borrowingRepository.save(
+                Borrowing.builder()
+                        .book(book)
+                        .user(user)
+                        .status(BorrowingStatus.BORROWED)
+                        .borrowingDate(borrowingDate)
+                        .dueDate(dueDate)
+                        .build()
+        );
     }
 
     private User validateUser(String userId) {
